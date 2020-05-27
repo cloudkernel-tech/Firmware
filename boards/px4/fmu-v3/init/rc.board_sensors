@@ -91,15 +91,23 @@ then
 else
 	# $BOARD_FMUV3 = 0 -> FMUv2
 
-	mpu6000 -s -b 1 -R 14 start
+        # mpu6000 -s -b 1 -R 14 start
 
 	# As we will use the external mag and the ICM-20608-G
 	# V2 build hwtypecmp is always false
 	# V3 build hwtypecmp supports V2|V2M|V30
 	if ! ver hwtypecmp V2M
 	then
-		mpu9250 -s -b 1 -R 14 start
-	# else: On the PixhawkMini the mpu9250 has been disabled due to HW errata
+            mpu9250 -s -b 1 -R 14 start
+        else #On the PixhawkMini the mpu9250 has been disabled due to HW errata
+
+            # kerloud mini here
+            # internal spi bus icm 20602
+            icm20602 start -s 1 -R 14
+            # internal spi bus icm 20689
+            icm20689 start -s 1 -R 14
+            # internal i2c bus ist8310
+            ist8310 start -I -R 4
 	fi
 
 	l3gd20 -s -b 1 start
