@@ -167,6 +167,7 @@ __EXPORT void stm32_spi1select(FAR struct spi_dev_s *dev, uint32_t devid, bool s
 
 		break;
 
+    case PX4_SPIDEV_ICM_20602:
 	case PX4_SPIDEV_ICM_20608:
 	case PX4_SPIDEV_ACCEL_MAG:
 
@@ -209,6 +210,7 @@ __EXPORT void stm32_spi1select(FAR struct spi_dev_s *dev, uint32_t devid, bool s
 		break;
 
 	case PX4_SPIDEV_MPU:
+    case PX4_SPIDEV_ICM_20689:
 
 		/* Making sure the other peripherals are not selected */
 		if (HW_VER_FMUV2 == board_get_hw_version()) {

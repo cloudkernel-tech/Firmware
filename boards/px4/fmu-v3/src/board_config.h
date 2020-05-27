@@ -47,6 +47,10 @@
 #include <nuttx/compiler.h>
 #include <stdint.h>
 
+// flags for boards
+#define KERLOUD_MINI_V1    //kercloud mini v1 board 2020 May
+
+
 /* Run time Hardware detection */
 #define BOARD_HAS_SIMPLE_HW_VERSIONING 1
 #define HW_VER_PA8             (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTA|GPIO_PIN8)
@@ -353,6 +357,14 @@
 
 #define PX4_SPIDEV_ICM_20608         6   /* ICM_20608 on PC15 */
 
+#define PX4_SPIDEV_ICM_20602                7
+#define PX4_SPIDEV_ICM_20689                8
+
+/* Kerloud mini assignments*/
+#ifdef KERLOUD_MINI_V1
+    #define GPIO_SPI1_CS_20602               GPIO_SPI1_CS_PC15 /* ICM20602 */
+    #define GPIO_SPI1_CS_20689               GPIO_SPI1_CS_PC2  /* ICM20689 */
+#endif
 
 
 /*

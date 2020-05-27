@@ -108,7 +108,13 @@ else
 	if ! ver hwtypecmp V2M
 	then
 		mpu9250 start
-	# else: On the PixhawkMini the mpu9250 has been disabled due to HW errata
+        else #On the PixhawkMini the mpu9250 has been disabled due to HW errata
+
+            # kerloud mini here
+            # internal spi bus icm 20602
+            mpu6000 -T 20602 start
+            # internal spi bus icm 20689
+            mpu6000 -T 20689 start
 	fi
 
 	l3gd20 start
