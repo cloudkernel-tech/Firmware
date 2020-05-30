@@ -6,7 +6,7 @@
 # External I2C bus
 hmc5883 -C -T -X start
 lis3mdl -X start
-ist8310 -C start
+ist8310 -b 1 -C start
 qmc5883 -X start
 
 # Internal I2C bus
@@ -115,6 +115,8 @@ else
             mpu6000 -T 20602 start
             # internal spi bus icm 20689
             mpu6000 -T 20689 start
+            # internal i2c bus ist8310
+            ist8310 -b 5 -R 4 -C start
 	fi
 
 	l3gd20 start
