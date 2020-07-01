@@ -1,0 +1,10 @@
+The customized scripts are provided for users in mainland china to install ros melodic with px4 toolchain.
+
+We change the pip install source to tsinghua mirror, and use downloaded scripts from github directly.
+
+Users can install by typing the following command in terminal:
+
+cd Tools/setup/custom
+bash ubuntu.sh
+bash ubuntu_sim_ros_melodic.sh
+
