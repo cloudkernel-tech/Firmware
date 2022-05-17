@@ -508,14 +508,14 @@ help:
 list_config_targets:
 	@for targ in $(patsubst %_default,%[_default],$(ALL_CONFIG_TARGETS)); do echo $$targ; done
 
-check_nuttx : $(call make_list,nuttx) \
+#check_nuttx : $(call make_list,nuttx) \
 	sizes
 
-check_linux : $(call make_list,linux) \
+#check_linux : $(call make_list,linux) \
 	sizes
 
-check_px4: $(call make_list,nuttx,"px4") \
+#check_px4: $(call make_list,nuttx,"px4") \
 	sizes
 
-check_nxp: $(call make_list,nuttx,"nxp") \
+#check_nxp: $(call make_list,nuttx,"nxp") \
 	sizes
