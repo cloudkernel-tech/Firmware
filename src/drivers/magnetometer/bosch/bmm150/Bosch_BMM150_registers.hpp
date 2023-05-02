@@ -40,6 +40,9 @@
 
 #pragma once
 
+#include <drivers/device/Device.hpp>
+#include <drivers/device/spi.h>
+
 #include <cstdint>
 
 // TODO: move to a central header
@@ -56,6 +59,8 @@ namespace Bosch_BMM150
 {
 static constexpr uint32_t I2C_SPEED = 400 * 1000; // 400 kHz I2C serial interface
 static constexpr uint8_t I2C_ADDRESS_DEFAULT = 0x10;
+
+static constexpr uint32_t SPI_SPEED = 10 * 1000 * 1000; // max 10MHz spi serial interface
 
 static constexpr uint8_t chip_identification_number = 0x32;
 
@@ -124,3 +129,8 @@ enum REPZ_BIT : uint8_t {
 };
 
 } // namespace Bosch_BMM150
+
+
+/* interface factories */
+extern device::Device *BMM150_SPI_interface(int bus, uint32_t devid, int bus_frequency, spi_mode_e spi_mode);
+extern device::Device *BMM150_I2C_interface(int bus, int bus_frequency);

@@ -1,6 +1,6 @@
 ############################################################################
 #
-#   Copyright (c) 2020 PX4 Development Team. All rights reserved.
+#   Copyright (c) 2016 PX4 Development Team. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,19 +30,41 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 ############################################################################
-
-px4_add_module(
-	MODULE drivers__magnetometer__bosch__bmm150
-	MAIN bmm150
-	COMPILE_FLAGS
-	SRCS
-		BMM150.cpp
-		BMM150.hpp
-                bmm150_i2c.cpp
-                bmm150_spi.cpp
-		bmm150_main.cpp
-		Bosch_BMM150_registers.hpp
-	DEPENDS
-		drivers_magnetometer
-		px4_work_queue
+if("${PX4_BOARD_LABEL}" STREQUAL  "bootloader")
+	add_library(drivers_board
+		bootloader_main.c
+		usb.c
 	)
+	target_link_libraries(drivers_board
+		PRIVATE
+			nuttx_arch # sdio
+			nuttx_drivers # sdio
+			bootloader
+	)
+	target_include_directories(drivers_board PRIVATE ${PX4_SOURCE_DIR}/platforms/nuttx/src/bootloader/common)
+
+else()
+	add_library(drivers_board
+		can.c
+		i2c.cpp
+		init.c
+		led.c
+		mtd.cpp
+		manifest.c
+		sdio.c
+		spi.cpp
+		timer_config.cpp
+		usb.c
+	)
+	add_dependencies(drivers_board arch_board_hw_info)
+
+	target_link_libraries(drivers_board
+		PRIVATE
+			arch_spi
+			arch_board_hw_info
+			drivers__led # drv_led_start
+			nuttx_arch # sdio
+			nuttx_drivers # sdio
+			px4_layer
+	)
+endif()

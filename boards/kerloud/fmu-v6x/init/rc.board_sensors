@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# Kerloud Uno FMUv6X specific board sensors init
+#------------------------------------------------------------------------------
+board_adc start
+
+if param compare SENS_EN_INA226 1
+then
+	# Start Digital power monitors
+	ina226 -X -b 1 -t 1 -k start
+	ina226 -X -b 2 -t 2 -k start
+fi
+
+if param compare SENS_EN_INA228 1
+then
+	# Start Digital power monitors
+	ina228 -X -b 1 -t 1 -k start
+	ina228 -X -b 2 -t 2 -k start
+fi
+
+if param compare SENS_EN_INA238 1
+then
+	# Start Digital power monitors
+	ina238 -X -b 1 -t 1 -k start
+	ina238 -X -b 2 -t 2 -k start
+fi
+
+# ICM-42670P in SPI1 bus
+icm42670p -s -b 1 -R 14 start
+
+# BMI088 in SPI3 bus (Acc & gyro)
+bmi088 -A -R 14 -s -b 3 start
+bmi088 -G -R 14 -s -b 3 start
+
+# BMM150 in SPI4 bus
+bmm150 -s -b 4 -R 6 start
+
+# External compass on GPS1/I2C1 (the 3rd external bus)
+ist8310 -X -b 1 -R 10 start
+
+qmc5883l -X -b 1 -R 10 start
+
+# Possible internal Baro (i2c4)
+bmp388 -I -b 4 -a 0x76 start
+
+# Baro on I2C3 (external bus)
+ms5611 -X start

@@ -31,17 +31,58 @@
  *
  ****************************************************************************/
 
-#include "BMM150.hpp"
-
 #include <px4_platform_common/getopt.h>
 #include <px4_platform_common/module.h>
+
+#include "BMM150.hpp"
+
+using namespace Bosch_BMM150;
+
+
+I2CSPIDriverBase *BMM150::instantiate(const I2CSPIDriverConfig &config, int runtime_instance)
+{
+    device::Device *interface = nullptr;
+
+    if (config.bus_type == BOARD_I2C_BUS) {
+        interface = BMM150_I2C_interface(config.bus, config.bus_frequency);
+
+    } else if (config.bus_type == BOARD_SPI_BUS) {
+        interface = BMM150_SPI_interface(config.bus, config.spi_devid, config.bus_frequency, config.spi_mode);
+    }
+
+    if (interface == nullptr) {
+        PX4_ERR("alloc failed");
+        return nullptr;
+    }
+
+    if (interface->init() != OK) {
+        delete interface;
+        PX4_DEBUG("no device on bus %i (devid 0x%x)", config.bus, config.spi_devid);
+        return nullptr;
+    }
+
+    BMM150 *dev = new BMM150(interface, config);
+
+    if (dev == nullptr) {
+        delete interface;
+        return nullptr;
+    }
+
+    if (OK != dev->init()) {
+        delete dev;
+        return nullptr;
+    }
+
+    return dev;
+}
+
 
 void BMM150::print_usage()
 {
 	PRINT_MODULE_USAGE_NAME("bmm150", "driver");
 	PRINT_MODULE_USAGE_SUBCATEGORY("magnetometer");
 	PRINT_MODULE_USAGE_COMMAND("start");
-	PRINT_MODULE_USAGE_PARAMS_I2C_SPI_DRIVER(true, false);
+    PRINT_MODULE_USAGE_PARAMS_I2C_SPI_DRIVER(true, true);
 	PRINT_MODULE_USAGE_PARAMS_I2C_ADDRESS(0x10);
 	PRINT_MODULE_USAGE_PARAM_INT('R', 0, 0, 35, "Rotation", true);
 	PRINT_MODULE_USAGE_DEFAULT_COMMANDS();
@@ -51,9 +92,11 @@ extern "C" int bmm150_main(int argc, char *argv[])
 {
 	int ch;
 	using ThisDriver = BMM150;
-	BusCLIArguments cli{true, false};
+    BusCLIArguments cli{true, true};
+
 	cli.default_i2c_frequency = I2C_SPEED;
 	cli.i2c_address = I2C_ADDRESS_DEFAULT;
+    cli.default_spi_frequency = SPI_SPEED;
 
 	while ((ch = cli.getOpt(argc, argv, "R:")) != EOF) {
 		switch (ch) {
