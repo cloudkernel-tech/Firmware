@@ -34,8 +34,10 @@ px4_add_board(
                 #imu/adis16497
                 #imu/l3gd20
                 #imu/lsm303d
+                imu/bosch/bmi088
                 imu/invensense/icm20602
                 imu/invensense/icm20689
+                imu/invensense/icm42670p
                 #imu/invensense/icm20608g
                 #imu/invensense/icm20948
                 #imu/invensense/mpu6000
@@ -57,9 +59,9 @@ px4_add_board(
 		pwm_out
 		px4io
                 #roboclaw
-		tap_esc
+                #tap_esc
 		telemetry # all available telemetry drivers
-		test_ppm
+                #test_ppm
 		tone_alarm
                 #uavcan
 	MODULES
@@ -113,7 +115,7 @@ px4_add_board(
 		reboot
 		reflect
 		sd_bench
-		tests # tests and test runner
+		#tests # tests and test runner
 		top
 		topic_listener
 		tune_control
@@ -121,6 +123,7 @@ px4_add_board(
 		ver
 		work_queue
 	EXAMPLES
+                #bottle_drop # OBC challenge
                 #fixedwing_control # Tutorial code from https://px4.io/dev/example_fixedwing_control
                 #hello
                 #hwtest # Hardware test

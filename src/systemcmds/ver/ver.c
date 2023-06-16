@@ -125,7 +125,7 @@ int ver_main(int argc, char *argv[])
 					}
 
 				} else {
-					PX4_ERR("Not enough arguments, try 'ver hwtypecmp {V2|V2M|V30|V31}'");
+                    PX4_ERR("Not enough arguments, try 'ver hwtypecmp {V2|V2M|V2N|V30|V31}'");
 				}
 
 				return 1;
