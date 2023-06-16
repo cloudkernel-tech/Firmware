@@ -6,7 +6,7 @@
 # External I2C bus
 hmc5883 -C -T -X start
 lis3mdl -X start
-ist8310 -b 1 -C start
+#ist8310 -b 1 -C start
 qmc5883 -X start
 
 # Internal I2C bus
@@ -100,16 +100,9 @@ then
 else
 	# $BOARD_FMUV3 = 0 -> FMUv2
 
-	mpu6000 start
-
-	# As we will use the external mag and the ICM-20608-G
-	# V2 build hwtypecmp is always false
-	# V3 build hwtypecmp supports V2|V2M|V30
-	if ! ver hwtypecmp V2M
+        # kerloud mini v1 board
+        if ver hwtypecmp V2M
 	then
-		mpu9250 start
-        else #On the PixhawkMini the mpu9250 has been disabled due to HW errata
-
             # kerloud mini here
             # internal spi bus icm 20602
             mpu6000 -T 20602 start
@@ -119,8 +112,29 @@ else
             ist8310 -b 5 -R 4 -C start
 	fi
 
-	l3gd20 start
-	lsm303d start
+        # kerloud mini v2 board
+        if ver hwtypecmp V2N
+        then
+            # BMI088 in SPI1 bus (Acc & gyro)
+            bmi088 -A -R 6 start
+            bmi088 -G -R 6 start
+
+            # icm42670p in spi1 bus
+            icm42670p -s -R 6 start
+
+            # bmp388 barometer in internal i2c2 bus
+            bmp388 -I start
+
+            # onboard magnetometer bmm150 (i2c1 bus)
+            bmm150 -R 6 start
+
+            # External compass on GPS1/I2C1 (external i2c bus)
+            ist8310 -b 1 -R 10 -C start
+
+            # ncp5623d rgbd led
+            rgbled_ncp5623c -a 0x38 start
+        fi
+
 fi
 
 unset BOARD_FMUV3

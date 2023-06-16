@@ -1,6 +1,6 @@
 ############################################################################
 #
-#   Copyright (c) 2017-2019 PX4 Development Team. All rights reserved.
+#   Copyright (c) 2021-2022 PX4 Development Team. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,15 +31,16 @@
 #
 ############################################################################
 px4_add_module(
-	MODULE drivers__tfmini
-	MAIN tfmini
+        MODULE drivers__icm42670p
+	MAIN icm42670p
+	COMPILE_FLAGS
 	SRCS
-		TFMINI.cpp
-		TFMINI.hpp
-		tfmini_main.cpp
-		tfmini_parser.cpp
-	MODULE_CONFIG
-		module.yaml
-        DEPENDS
-                drivers_rangefinder
+		icm42670p_main.cpp
+		ICM42670P.cpp
+		ICM42670P.hpp
+		InvenSense_ICM42670P_registers.hpp
+	DEPENDS
+		px4_work_queue
+		drivers_accelerometer
+		drivers_gyroscope
 	)

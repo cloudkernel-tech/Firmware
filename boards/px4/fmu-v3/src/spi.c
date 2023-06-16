@@ -72,7 +72,7 @@
 /*   Verification
  *        PA5 PA6 PA7 PB0 PB1 PB4 PC1 PC2 PC13 PC14 PC15 PD7 PD15 PE2 PE4 PE5 PE6
  * driver  X   X   X                                               X       X   X
- * local               V2  v2   V2  V3  a   V2  V2M  V2x   a    a        4
+ * local               V2  v2   V2  V3  a   V2  V2M/N  V2x   a    a        4
  */
 static void stm32_spi1_initialize(void)
 {
@@ -84,6 +84,11 @@ static void stm32_spi1_initialize(void)
 	if (HW_VER_FMUV2MINI == board_get_hw_version()) {
 		stm32_configgpio(GPIO_SPI1_EXTI_20608_DRDY_PC14);
 		stm32_configgpio(GPIO_SPI1_CS_PC15);
+
+#ifdef  GPIO_SPI1_CS_BMI088_GYRO
+        /* Kerloud mini V2 support, bmi088 cs pc13*/
+        stm32_configgpio(GPIO_SPI1_CS_PC13);
+#endif
 
 	} else if (HW_VER_FMUV3 == board_get_hw_version()) {
 		stm32_configgpio(GPIO_SPI1_CS_PC1);
@@ -148,11 +153,20 @@ __EXPORT void stm32_spi1select(FAR struct spi_dev_s *dev, uint32_t devid, bool s
 
 	switch (devid) {
 	case PX4_SPIDEV_GYRO:
+    case PX4_SPIDEV_BMI088_GYR:
 
 		/* Making sure the other peripherals are not selected */
 		if (HW_VER_FMUV2 == board_get_hw_version()) {
 			stm32_gpiowrite(GPIO_SPI1_CS_PC13, !selected);
 		}
+
+#ifdef  GPIO_SPI1_CS_BMI088_GYRO
+        /* Kerloud mini V2 support, bmi088 cs pc13*/
+        if (HW_VER_FMUV2MINI == board_get_hw_version()) {
+            stm32_gpiowrite(GPIO_SPI1_CS_PC13, !selected);
+        }
+#endif
+
 
 		if (HW_VER_FMUV3 != board_get_hw_version()) {
 			stm32_gpiowrite(GPIO_SPI1_CS_PC15, 1);
@@ -168,6 +182,7 @@ __EXPORT void stm32_spi1select(FAR struct spi_dev_s *dev, uint32_t devid, bool s
 		break;
 
     case PX4_SPIDEV_ICM_20602:
+    case PX4_SPIDEV_ICM_42670P:
 	case PX4_SPIDEV_ICM_20608:
 	case PX4_SPIDEV_ACCEL_MAG:
 
@@ -175,6 +190,13 @@ __EXPORT void stm32_spi1select(FAR struct spi_dev_s *dev, uint32_t devid, bool s
 		if (HW_VER_FMUV2 == board_get_hw_version()) {
 			stm32_gpiowrite(GPIO_SPI1_CS_PC13, 1);
 		}
+
+#ifdef  GPIO_SPI1_CS_BMI088_GYRO
+        /* Kerloud mini V2 support, bmi088 cs pc13*/
+        if (HW_VER_FMUV2MINI == board_get_hw_version()) {
+            stm32_gpiowrite(GPIO_SPI1_CS_PC13, 1);
+        }
+#endif
 
 		if (HW_VER_FMUV3 != board_get_hw_version()) {
 			stm32_gpiowrite(GPIO_SPI1_CS_PC15, !selected);
@@ -211,11 +233,19 @@ __EXPORT void stm32_spi1select(FAR struct spi_dev_s *dev, uint32_t devid, bool s
 
 	case PX4_SPIDEV_MPU:
     case PX4_SPIDEV_ICM_20689:
+    case PX4_SPIDEV_BMI088_ACC:
 
 		/* Making sure the other peripherals are not selected */
 		if (HW_VER_FMUV2 == board_get_hw_version()) {
 			stm32_gpiowrite(GPIO_SPI1_CS_PC13, 1);
 		}
+
+#ifdef  GPIO_SPI1_CS_BMI088_GYRO
+        /* Kerloud mini V2 support, bmi088 cs pc13*/
+        if (HW_VER_FMUV2MINI == board_get_hw_version()) {
+            stm32_gpiowrite(GPIO_SPI1_CS_PC13, 1);
+        }
+#endif
 
 		if (HW_VER_FMUV3 != board_get_hw_version()) {
 			stm32_gpiowrite(GPIO_SPI1_CS_PC15, 1);

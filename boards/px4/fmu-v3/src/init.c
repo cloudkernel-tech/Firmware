@@ -195,7 +195,9 @@ __EXPORT void board_on_reset(int status)
  *   V 2    - FMUv2
  *   V 3 0  - FMUv3 2.0
  *   V 3 1  - FMUv3 2.1 - not differentiateable,
- *   V 2 M  - FMUv2 Mini
+ *   V 2 M  - FMUv2 Mini, Kerloud mini v1
+ *
+ *   V 2 N  - Kerloud mini v2
  *
  ************************************************************************************/
 
@@ -369,6 +371,16 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	if (OK == determin_hw_version(&hw_version, & hw_revision)) {
 		switch (hw_version) {
 		case HW_VER_FMUV2_STATE:
+
+            stm32_configgpio(HW_VER_PC1);
+            up_udelay(10);
+            bool is_pin_high = stm32_gpioread(HW_VER_PC1);
+
+            if (!is_pin_high){ //force to mini state for Kerloud mini V2
+                hw_type[2] = 'N'; //Kerloud mini v2
+                hw_version = HW_VER_FMUV2MINI_STATE;
+            }
+
 			break;
 
 		case HW_VER_FMUV3_STATE:
@@ -401,10 +413,9 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 				syslog(LOG_INFO, "\nPixhack V3 detected, forcing to fmu-v3");
 
 			} else {
-
 				/* It is a mini */
+                hw_type[2] = 'M'; //Kerloud mini v1
 
-				hw_type[2] = 'M';
 			}
 
 			break;

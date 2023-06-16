@@ -47,15 +47,14 @@
 #include <nuttx/compiler.h>
 #include <stdint.h>
 
-// flags for boards
-#define KERLOUD_MINI_V1    //kercloud mini v1 board 2020 May
-
-
 /* Run time Hardware detection */
 #define BOARD_HAS_SIMPLE_HW_VERSIONING 1
 #define HW_VER_PA8             (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTA|GPIO_PIN8)
 #define HW_VER_PB4             (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTB|GPIO_PIN4)
 #define HW_VER_PB12            (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTB|GPIO_PIN12)
+
+#define HW_VER_PC1            (GPIO_INPUT|GPIO_PULLDOWN|GPIO_PORTC|GPIO_PIN1)  //added for Kerloud mini versioning
+
 #define HW_VER_PA8_INIT        (GPIO_VDD_5V_PERIPH_EN)
 #define HW_VER_PB4_INIT        (GPIO_SPI1_EXTI_DRDY_PB4)
 #define HW_VER_PB12_INIT       (GPIO_CAN2_RX | GPIO_PULLUP) /* Assume V2 needing pull up */
@@ -360,14 +359,27 @@
 #define PX4_SPIDEV_ICM_20602                7
 #define PX4_SPIDEV_ICM_20689                8
 
-/* Kerloud mini assignments*/
-#ifdef KERLOUD_MINI_V1
-    #define GPIO_SPI1_CS_20602               GPIO_SPI1_CS_PC15 /* ICM20602 */
-    #define GPIO_SPI1_CS_20689               GPIO_SPI1_CS_PC2  /* ICM20689 */
-#endif
 
+/* Kerloud mini assignments (annotation only)*/
+// v1 board
+#define GPIO_SPI1_CS_20602               GPIO_SPI1_CS_PC15 /* ICM20602 */
+#define GPIO_SPI1_CS_20689               GPIO_SPI1_CS_PC2  /* ICM20689 */
+// v2 board
+#define GPIO_SPI1_CS_BMI088_ACC         GPIO_SPI1_CS_PC2  //bmi088 in spi 1
+#define GPIO_SPI1_CS_BMI088_GYRO        GPIO_SPI1_CS_PC13
+
+#define GPIO_SPI1_CS_ICM42670P          GPIO_SPI1_CS_PC15 //icm42670p
+#define GPIO_SPI1_EXTI_ICM42670P_DRDY_PC14   (GPIO_INPUT|GPIO_FLOAT|GPIO_EXTI|GPIO_PORTC|GPIO_PIN14) //icm42670p DRDY PC14, same as 20608
+
+#define PX4_SPIDEV_BMI088_ACC       PX4_MK_SPI_SEL(PX4_SPI_BUS_SENSORS,5)
+#define PX4_SPIDEV_BMI088_GYR       PX4_MK_SPI_SEL(PX4_SPI_BUS_SENSORS,6)
+
+#define PX4_SPIDEV_ICM_42670P       PX4_MK_SPI_SEL(PX4_SPI_BUS_SENSORS,7)
+
+#define PX4_I2C_OBDEV_BMP388        0x76  //bmp388 baro
 
 /*
+ *
  * ADC channels
  *
  * These are the channel numbers of the ADCs of the microcontroller that can be used by the Px4 Firmware in the adc driver

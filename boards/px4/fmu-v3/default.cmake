@@ -30,33 +30,35 @@ px4_add_board(
 		dshot
 		gps
 		#heater
-		imu/adis16448
+		#imu/adis16448
 		#imu # all available imu drivers
-		imu/l3gd20
-		imu/lsm303d
+		#imu/l3gd20
+		#imu/lsm303d
 		imu/mpu6000
-		imu/mpu9250
-		imu/icm20948
-		irlock
+                imu/bmi088
+                imu/icm42670p
+                #imu/mpu9250
+                #imu/icm20948
+                #irlock
 		lights/blinkm
 		lights/rgbled
 		lights/rgbled_ncp5623c
 		#lights/rgbled_pwm
 		magnetometer # all available magnetometer drivers
 		#md25
-		mkblctrl
+                #mkblctrl
 		#optical_flow # all available optical flow drivers
 		optical_flow/px4flow
-		pca9685
-		protocol_splitter
+                #pca9685
+                #protocol_splitter
 		pwm_input
 		pwm_out_sim
 		px4fmu
 		px4io
-		roboclaw
-		tap_esc
+                #roboclaw
+                #tap_esc
 		telemetry # all available telemetry drivers
-		test_ppm
+                #test_ppm
 		tone_alarm
 		uavcan
 
@@ -106,7 +108,7 @@ px4_add_board(
 		reflect
 		sd_bench
 		shutdown
-		tests # tests and test runner
+                #tests # tests and test runner
 		top
 		topic_listener
 		tune_control
@@ -115,14 +117,14 @@ px4_add_board(
 		work_queue
 
 	EXAMPLES
-		bottle_drop # OBC challenge
-		fixedwing_control # Tutorial code from https://px4.io/dev/example_fixedwing_control
-		hello
-		hwtest # Hardware test
+                #bottle_drop # OBC challenge
+                #fixedwing_control # Tutorial code from https://px4.io/dev/example_fixedwing_control
+                #hello
+                #hwtest # Hardware test
 		#matlab_csv_serial
-		px4_mavlink_debug # Tutorial code from http://dev.px4.io/en/debug/debug_values.html
-		px4_simple_app # Tutorial code from http://dev.px4.io/en/apps/hello_sky.html
-		rover_steering_control # Rover example app
-		uuv_example_app
+                #px4_mavlink_debug # Tutorial code from http://dev.px4.io/en/debug/debug_values.html
+                #px4_simple_app # Tutorial code from http://dev.px4.io/en/apps/hello_sky.html
+                #rover_steering_control # Rover example app
+                #uuv_example_app
 
 	)

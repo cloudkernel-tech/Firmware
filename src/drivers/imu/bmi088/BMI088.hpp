@@ -50,6 +50,8 @@
 
 #define BMI088_TIMER_REDUCTION				200
 
+using namespace time_literals;
+
 class BMI088 : public device::SPI
 {
 

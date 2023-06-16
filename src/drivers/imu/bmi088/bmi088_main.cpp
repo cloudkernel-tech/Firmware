@@ -90,7 +90,7 @@ start(bool external_bus, enum Rotation rotation, enum sensor_type sensor)
 #endif
 
 		} else {
-			*g_dev_acc_ptr = new BMI088_accel(PX4_SPI_BUS_SENSORS3, path_accel, PX4_SPIDEV_BMI088_ACC, rotation);
+            *g_dev_acc_ptr = new BMI088_accel(PX4_SPI_BUS_SENSORS, path_accel, PX4_SPIDEV_BMI088_ACC, rotation);
 		}
 
 		if (*g_dev_acc_ptr == nullptr) {
@@ -114,13 +114,13 @@ start(bool external_bus, enum Rotation rotation, enum sensor_type sensor)
 		/* create the driver */
 		if (external_bus) {
 #if defined(PX4_SPI_BUS_EXT) && defined(PX4_SPIDEV_EXT_BMI)
-			*g_dev_ptr = new BMI088_gyro(PX4_SPI_BUS_EXT, path_gyro, PX4_SPIDEV_EXT_BMI, rotation);
+            *g_dev_gyr_ptr = new BMI088_gyro(PX4_SPI_BUS_EXT, path_gyro, PX4_SPIDEV_EXT_BMI, rotation);
 #else
 			errx(0, "External SPI not available");
 #endif
 
 		} else {
-			*g_dev_gyr_ptr = new BMI088_gyro(PX4_SPI_BUS_SENSORS3, path_gyro, PX4_SPIDEV_BMI088_GYR, rotation);
+            *g_dev_gyr_ptr = new BMI088_gyro(PX4_SPI_BUS_SENSORS, path_gyro, PX4_SPIDEV_BMI088_GYR, rotation);
 		}
 
 		if (*g_dev_gyr_ptr == nullptr) {
@@ -281,7 +281,7 @@ testerror(bool external_bus, enum sensor_type sensor)
 void
 usage()
 {
-	warnx("missing command: try 'start', 'info', 'stop', 'regdump', 'testerror'");
+    warnx("missing command: try 'start', 'info/status', 'stop', 'regdump', 'testerror'");
 	warnx("options:");
 	warnx("    -X    (external bus)");
 	warnx("    -R    rotation");
@@ -393,7 +393,7 @@ bmi088_main(int argc, char *argv[])
 	/*
 	* Print driver information.
 	*/
-	if (!strcmp(verb, "info")) {
+    if (!strcmp(verb, "info") || !strcmp(verb, "status")) {
 		bmi088::info(external_bus, sensor);
 	}
 
