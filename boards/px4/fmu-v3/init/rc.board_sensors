@@ -124,7 +124,7 @@ else
         ist8310 -b 1 -C start
 
         # ncp5623d rgbd led
-        rgbled_ncp5623c -a 0x38 start
+        rgbled_ncp5623c -X -a 0x38 start
     fi
 
 fi

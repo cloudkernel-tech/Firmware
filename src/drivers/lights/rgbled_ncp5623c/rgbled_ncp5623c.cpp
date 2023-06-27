@@ -52,6 +52,7 @@
 
 
 #define ADDR			0x39	/**< I2C adress of NCP5623C */
+#define ADDR2           0x38    /**< I2C adress of NCP5623D */
 
 #define NCP5623_LED_CURRENT	0x20	/**< Current register */
 #define NCP5623_LED_PWM0	0x40	/**< pwm0 register */
@@ -79,6 +80,7 @@ public:
 
 private:
 
+    int             i2c_addr;
 	float			_brightness{1.0f};
 	float			_max_brightness{1.0f};
 
@@ -103,6 +105,7 @@ RGBLED_NPC5623C::RGBLED_NPC5623C(I2CSPIBusOption bus_option, const int bus, int 
 	I2C(DRV_LED_DEVTYPE_RGBLED_NCP5623C, MODULE_NAME, bus, address, bus_frequency),
 	I2CSPIDriver(MODULE_NAME, px4::device_bus_to_wq(get_device_id()), bus_option, bus, address)
 {
+    i2c_addr = address;
 }
 
 int
@@ -216,9 +219,15 @@ RGBLED_NPC5623C::send_led_rgb()
 	uint8_t brightness = 0x1f * _max_brightness;
 
 	msg[0] = NCP5623_LED_CURRENT | (brightness & 0x1f);
-	msg[2] = NCP5623_LED_PWM0 | (uint8_t(_r * _brightness) & 0x1f);
-	msg[4] = NCP5623_LED_PWM1 | (uint8_t(_g * _brightness) & 0x1f);
-	msg[6] = NCP5623_LED_PWM2 | (uint8_t(_b * _brightness) & 0x1f);
+    if (i2c_addr == ADDR){
+        msg[2] = NCP5623_LED_PWM0 | (uint8_t(_r * _brightness) & 0x1f);
+        msg[4] = NCP5623_LED_PWM1 | (uint8_t(_g * _brightness) & 0x1f);
+        msg[6] = NCP5623_LED_PWM2 | (uint8_t(_b * _brightness) & 0x1f);
+    } else if (i2c_addr == ADDR2){
+        msg[2] = NCP5623_LED_PWM0 | (uint8_t(_b * _brightness) & 0x1f);
+        msg[4] = NCP5623_LED_PWM1 | (uint8_t(_g * _brightness) & 0x1f);
+        msg[6] = NCP5623_LED_PWM2 | (uint8_t(_r * _brightness) & 0x1f);
+    }
 
 	return transfer(&msg[0], 7, nullptr, 0);
 }
