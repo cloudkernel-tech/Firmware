@@ -45,3 +45,8 @@ bmp388 -I -b 4 -a 0x76 start
 
 # Baro on I2C3 (external bus)
 ms5611 -X start
+
+# ncp5623d
+rgbled_ncp5623c stop  # stop existing instances
+usleep 1000
+rgbled_ncp5623c -a 0x38 -o 321 -X start

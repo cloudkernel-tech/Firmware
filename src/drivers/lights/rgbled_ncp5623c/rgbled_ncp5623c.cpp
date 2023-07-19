@@ -52,6 +52,7 @@ using namespace time_literals;
 
 #define NCP5623B_ADDR       0x38  /**< I2C address of NCP5623B */
 #define NCP5623C_ADDR       0x39  /**< I2C address of NCP5623C */
+#define NCP5623D_ADDR       0x38  /**< I2C address of NCP5623D */
 
 #define NCP5623_LED_CURRENT 0x20  /**< Current register */
 #define NCP5623_LED_PWM0    0x40  /**< pwm0 register */
