@@ -73,10 +73,10 @@
 
 /* Configuration ************************************************************************************/
 
-#define BOARD_HAS_LTC44XX_VALIDS      2 //  N Bricks
+#define BOARD_HAS_LTC44XX_VALIDS      1 //  N Bricks, one Vbrick only
 #define BOARD_HAS_USB_VALID           1 // LTC Has USB valid
-#define BOARD_HAS_NBAT_V              2d // 2 Digital Voltage
-#define BOARD_HAS_NBAT_I              2d // 2 Digital Current
+//#define BOARD_HAS_NBAT_V              2d // 2 Digital Voltage
+//#define BOARD_HAS_NBAT_I              2d // 2 Digital Current
 
 /* PX4FMU GPIOs ***********************************************************************************/
 
@@ -187,6 +187,10 @@
 #define ADC_HW_VER_SENSE_CHANNEL                /* PH3  */  ADC3_CH(14)
 #define ADC_HW_REV_SENSE_CHANNEL                /* PH4  */  ADC3_CH(15)
 
+#define ADC_BATTERY_VOLTAGE_CHANNEL	9 //PB0
+#define ADC_BATTERY_CURRENT_CHANNEL	6 //PF12
+
+
 #define ADC_CHANNELS \
 	((1 << ADC_SCALED_VDD_3V3_SENSORS1_CHANNEL) | \
 	 (1 << ADC_SCALED_VDD_3V3_SENSORS2_CHANNEL) | \
@@ -252,13 +256,15 @@
 
 #define GPIO_nPOWER_IN_A                /* PG1  */ (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTG|GPIO_PIN1)
 #define GPIO_nPOWER_IN_B                /* PG2  */ (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTG|GPIO_PIN2)
-#define GPIO_nPOWER_IN_C                /* PG3  */ (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTG|GPIO_PIN3)
+//#define GPIO_nPOWER_IN_C                /* PG3  */ (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTG|GPIO_PIN3) //spared for kerloud uno
 
 #define GPIO_nVDD_BRICK1_VALID          GPIO_nPOWER_IN_A /* Brick 1 Is Chosen */
-#define GPIO_nVDD_BRICK2_VALID          GPIO_nPOWER_IN_B /* Brick 2 Is Chosen  */
-#define BOARD_NUMBER_BRICKS             2
-#define BOARD_NUMBER_DIGITAL_BRICKS     2
-#define GPIO_nVDD_USB_VALID             GPIO_nPOWER_IN_C /* USB     Is Chosen */
+//#define GPIO_nVDD_BRICK2_VALID          GPIO_nPOWER_IN_B /* Brick 2 Is Chosen  */
+#define GPIO_VDD_BRICK_VALID            GPIO_nPOWER_IN_A //same as GPIO_nVDD_BRICK1_VALID
+
+#define BOARD_NUMBER_BRICKS             1
+#define BOARD_NUMBER_DIGITAL_BRICKS     0
+#define GPIO_nVDD_USB_VALID             GPIO_nPOWER_IN_B /* USB     Is Chosen */
 
 #define GPIO_VDD_5V_PERIPH_nEN          /* PG4  */ (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_SET|GPIO_PORTG|GPIO_PIN4)
 #define GPIO_VDD_5V_PERIPH_nOC          /* PE15 */ (GPIO_INPUT |GPIO_FLOAT|GPIO_PORTE|GPIO_PIN15)
@@ -382,6 +388,7 @@
  * this board support the ADC system_power interface, and therefore
  * provides the true logic GPIO BOARD_ADC_xxxx macros.
  */
+#define BOARD_ADC_BRICK_VALID   (!px4_arch_gpioread(GPIO_VDD_BRICK_VALID))
 #define BOARD_ADC_USB_CONNECTED (px4_arch_gpioread(GPIO_OTGFS_VBUS))
 #define BOARD_ADC_USB_VALID     (!px4_arch_gpioread(GPIO_nVDD_USB_VALID))
 
@@ -444,7 +451,7 @@
 		GPIO_HEATER_OUTPUT,               \
 		GPIO_nPOWER_IN_A,                 \
 		GPIO_nPOWER_IN_B,                 \
-		GPIO_nPOWER_IN_C,                 \
+        /*GPIO_nPOWER_IN_C,*/             \
 		GPIO_VDD_5V_PERIPH_nEN,           \
 		GPIO_VDD_5V_PERIPH_nOC,           \
 		GPIO_VDD_5V_HIPOWER_nEN,          \
